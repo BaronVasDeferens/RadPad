@@ -20,12 +20,27 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         LinearLayout rowOne = (LinearLayout) findViewById(R.id.rowOne);
+        LinearLayout rowTwo = (LinearLayout) findViewById(R.id.rowTwo);
+        LinearLayout rowThree = (LinearLayout) findViewById(R.id.rowThree);
+        LinearLayout rowFour = (LinearLayout) findViewById(R.id.rowFour);
 
         fragmentSamplePads = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             FragmentSamplePad pad = new FragmentSamplePad();
             fragmentSamplePads.add(pad);
             fragmentTransaction.add(R.id.rowOne, pad);
+
+            pad = new FragmentSamplePad();
+            fragmentSamplePads.add(pad);
+            fragmentTransaction.add(R.id.rowTwo, pad);
+
+            pad = new FragmentSamplePad();
+            fragmentSamplePads.add(pad);
+            fragmentTransaction.add(R.id.rowThree, pad);
+
+            pad = new FragmentSamplePad();
+            fragmentSamplePads.add(pad);
+            fragmentTransaction.add(R.id.rowFour, pad);
         }
 
         fragmentTransaction.commit();

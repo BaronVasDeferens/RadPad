@@ -15,7 +15,7 @@
             android:id="@+id/btnTriggerSample"
             android:layout_width="125dp"
             android:layout_height="125dp"
-            android:background="@color/red" />
+            android:background="@color/darkGray" />
 
         <TextView
             android:id="@+id/sampleName"
