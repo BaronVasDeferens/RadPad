@@ -8,6 +8,8 @@ import android.media.PlaybackParams;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Created by skot on 3/3/18.
@@ -18,10 +20,10 @@ public class SoundPlayer implements AudioTrack.OnPlaybackPositionUpdateListener 
 
     final int MAX_BUFFER_SIZE = 1000000;
 
-    //    private ByteBuffer buffer;
-    private byte[] buffer;
+        private ByteBuffer buffer;
+//    private byte[] buffer;
     private int bufferLength = 0;
-    private int sampleRate = 44100;
+    private int playbackRate = 44100;
     private AudioTrack audioTrack = null;
     private boolean loopingMode = false;
     private int playbackStart;
@@ -46,7 +48,8 @@ public class SoundPlayer implements AudioTrack.OnPlaybackPositionUpdateListener 
 
 
         bufferLength = (int) file.length();
-        buffer = new byte[bufferLength];
+        buffer = ByteBuffer.allocate(bufferLength);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
 
         System.out.println(">>> LOADING " + file.getName() + "...");
 
@@ -55,7 +58,9 @@ public class SoundPlayer implements AudioTrack.OnPlaybackPositionUpdateListener 
             if (bufferLength % 2 != 0) {
                 bufferLength = bufferLength - (bufferLength % 2);
             }
-            System.out.println(">>> " + in.read(buffer) + " BYTES READ (bufferLength = " + bufferLength + ")");
+//            System.out.println(">>> " + in.read(buffer) + " BYTES READ (bufferLength = " + bufferLength + ")");
+            System.out.println(">>> " + in.read(buffer.array()) + " BYTES READ (bufferLength = " + bufferLength + ")");
+
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,18 +71,18 @@ public class SoundPlayer implements AudioTrack.OnPlaybackPositionUpdateListener 
 
         audioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
-                44100,
+                playbackRate,
                 AudioFormat.CHANNEL_OUT_STEREO,
-                AudioFormat.ENCODING_PCM_8BIT,
+                AudioFormat.ENCODING_PCM_16BIT,
                 1000000,
                 AudioTrack.MODE_STATIC);
 
         playbackStart = 0;
-        playbackEnd = bufferLength - 1;
+        playbackEnd = bufferLength;
         loopStart = 0;
-        loopEnd = bufferLength - 1;
+        loopEnd = bufferLength;
 
-        audioTrack.write(buffer, 0, bufferLength);
+        audioTrack.write(buffer.array(), 0, bufferLength);
 
         reset();
     }
@@ -86,16 +91,16 @@ public class SoundPlayer implements AudioTrack.OnPlaybackPositionUpdateListener 
 
         audioTrack.stop();
 //        audioTrack.write(buffer, buffer.array().length, AudioTrack.WRITE_NON_BLOCKING);
-        audioTrack.write(buffer, 0, bufferLength);
+        audioTrack.write(buffer.array(), 0, bufferLength);
         audioTrack.setPlaybackHeadPosition(playbackStart);
 //        audioTrack.setNotificationMarkerPosition(playbackEnd);
 //        audioTrack.setLoopPoints(loopStart, loopEnd, loopingMode ? -1 : 0);
     }
 
 //    public synchronized void setPlaybackFrequency(final float percent) {
-//        sampleRate = (int) (44100 * percent);
-//        System.out.println("sampleRate = " + sampleRate);
-//        audioTrack.setPlaybackFrequency(sampleRate);
+//        playbackRate = (int) (44100 * percent);
+//        System.out.println("playbackRate = " + playbackRate);
+//        audioTrack.setPlaybackFrequency(playbackRate);
 //    }
 
     public void setPlaybackFrequency(final int playbackRate) {

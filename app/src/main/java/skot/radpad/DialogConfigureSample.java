@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -36,31 +35,10 @@ public class DialogConfigureSample extends DialogFragment implements AdapterView
     OnSampleSelectedListener listener;
     private int selectedPlaybackRate;
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        System.out.println(">>> progress : " + progress);
-        selectedPlaybackRate = (int)((progress / 100f) * 88200);
-        playbackRateBox.setText(Integer.toString(selectedPlaybackRate));
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    interface OnSampleSelectedListener {
-        void onSampleSelected(String sampleFileName, int playbackRate);
-    }
 
     public void setOnSampledSelectedListener(final OnSampleSelectedListener listener) {
         this.listener = listener;
     }
-
 
     public void setSampleDir(final File sampleDir) {
 
@@ -103,7 +81,7 @@ public class DialogConfigureSample extends DialogFragment implements AdapterView
 
         playbackRateSeekBar = (SeekBar) myLayout.findViewById(R.id.playbackRateSeekBar);
         playbackRateSeekBar.setOnSeekBarChangeListener(this);
-        playbackRateSeekBar.setProgress((int)((selectedPlaybackRate / 88200f)*100));
+        playbackRateSeekBar.setProgress((int) ((selectedPlaybackRate / 88200f) * 100));
         System.out.println("NEW selectedPlaybackRate = " + selectedPlaybackRate);
 
         if (!selectedSampleName.contentEquals("")) {
@@ -132,6 +110,26 @@ public class DialogConfigureSample extends DialogFragment implements AdapterView
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectedSampleName = fileNameArray.get(position);
         System.out.println(">>> SELECTION : " + selectedSampleName);
-        selectedSampleDisplay.setText("SELECTED SAMPLE : " + selectedSampleName);
+        selectedSampleDisplay.setText(selectedSampleName);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        selectedPlaybackRate = (int) ((progress / 100f) * 88200);
+        playbackRateBox.setText(Integer.toString(selectedPlaybackRate));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    interface OnSampleSelectedListener {
+        void onSampleSelected(String sampleFileName, int playbackRate);
     }
 }
