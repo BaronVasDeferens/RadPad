@@ -21,7 +21,7 @@
             android:id="@+id/selectedSample"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SELECTED SAMPLE : NONE"
+            android:text=""
             android:textColor="@color/red"
             android:textSize="20dp" />
 
